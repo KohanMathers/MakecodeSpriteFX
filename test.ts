@@ -16,16 +16,19 @@ let b = sprites.create(img`
 
 spriteUtils.rotate(a, 45)
 spriteUtils.setRotation(a, 90)
+spriteUtils.rotation(a)
+spriteUtils.faceDirection(a, 45)
 spriteUtils.faceToward(a, b)
 spriteUtils.flipHorizontal(a)
 spriteUtils.flipVertical(a)
 spriteUtils.smoothRotate(a, 180, 500)
+spriteUtils.resetRotation(a)
 spriteUtils.setOpacity(a, 60)
 spriteUtils.recolor(a, 2, 9)
 spriteUtils.outline(a, 1)
 
-let distance = spriteUtils.getDistanceBetween(a, b)
-let angle = spriteUtils.getAngleBetween(a, b)
+let distance = spriteUtils.distanceBetween(a, b)
+let angle = spriteUtils.angleBetween(a, b)
 spriteUtils.setRotation(a, angle)
 spriteUtils.moveForward(a, distance / 4)
 

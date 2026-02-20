@@ -14,7 +14,7 @@ namespace spriteUtils {
         return normalized
     }
 
-    function getSpriteIndex(sprite: Sprite): number {
+    function spriteIndex(sprite: Sprite): number {
         for (let i = 0; i < trackedSprites.length; i++) {
             if (trackedSprites[i] == sprite) return i
         }
@@ -86,13 +86,13 @@ namespace spriteUtils {
     }
 
     function refreshSpriteImage(sprite: Sprite): void {
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         const rotated = rotateImage(originalImages[idx], rotationAngles[idx])
         sprite.setImage(applyOpacityDither(rotated, opacityPercents[idx]))
     }
 
     function setSpriteData(sprite: Sprite, original: Image, angle: number, opacity: number): void {
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         originalImages[idx] = original
         rotationAngles[idx] = normalizeAngle(angle)
         opacityPercents[idx] = clamp(opacity, 0, 100)
@@ -136,7 +136,7 @@ namespace spriteUtils {
     //% angle.defl=0
     //% group="Rotation"
     export function rotate(sprite: Sprite, angle: number): void {
-        setRotation(sprite, getRotation(sprite) + angle)
+        setRotation(sprite, rotation(sprite) + angle)
     }
 
     //% block="set rotation of $sprite to $angle degrees"
@@ -147,18 +147,18 @@ namespace spriteUtils {
     export function setRotation(sprite: Sprite, angle: number): void {
         if (!sprite) return
 
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         rotationAngles[idx] = normalizeAngle(angle)
         refreshSpriteImage(sprite)
     }
 
-    //% block="get rotation of $sprite"
+    //% block="rotation of $sprite"
     //% sprite.shadow=variables_get
     //% sprite.defl=mySprite
     //% group="Rotation"
-    export function getRotation(sprite: Sprite): number {
+    export function rotation(sprite: Sprite): number {
         if (!sprite) return 0
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         return rotationAngles[idx]
     }
 
@@ -169,7 +169,7 @@ namespace spriteUtils {
     export function resetRotation(sprite: Sprite): void {
         if (!sprite) return
 
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         rotationAngles[idx] = 0
         refreshSpriteImage(sprite)
     }
@@ -192,7 +192,7 @@ namespace spriteUtils {
     export function faceToward(sprite: Sprite, target: Sprite): void {
         if (!sprite || !target) return
 
-        setRotation(sprite, getAngleBetween(sprite, target))
+        setRotation(sprite, angleBetween(sprite, target))
     }
 
     //% block="smooth rotate $sprite to $targetAngle degrees over $duration ms"
@@ -210,7 +210,7 @@ namespace spriteUtils {
         }
 
         control.runInParallel(function () {
-            const startAngle = getRotation(sprite)
+            const startAngle = rotation(sprite)
             const target = normalizeAngle(targetAngle)
             let delta = target - startAngle
 
@@ -237,7 +237,7 @@ namespace spriteUtils {
     export function flipHorizontal(sprite: Sprite): void {
         if (!sprite) return
 
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         const flipped = originalImages[idx].clone()
         flipped.flipX()
         originalImages[idx] = flipped
@@ -251,7 +251,7 @@ namespace spriteUtils {
     export function flipVertical(sprite: Sprite): void {
         if (!sprite) return
 
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         const flipped = originalImages[idx].clone()
         flipped.flipY()
         originalImages[idx] = flipped
@@ -265,7 +265,7 @@ namespace spriteUtils {
     //% group="Effects"
     export function setOpacity(sprite: Sprite, opacity: number): void {
         if (!sprite) return
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         opacityPercents[idx] = clamp(opacity, 0, 100)
         refreshSpriteImage(sprite)
     }
@@ -278,7 +278,7 @@ namespace spriteUtils {
     //% group="Effects"
     export function recolor(sprite: Sprite, fromColor: number, toColor: number): void {
         if (!sprite) return
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         const from = clamp(Math.round(fromColor), 0, 15)
         const to = clamp(Math.round(toColor), 0, 15)
         const recolored = originalImages[idx].clone()
@@ -301,7 +301,7 @@ namespace spriteUtils {
     export function outline(sprite: Sprite, color: number): void {
         if (!sprite) return
 
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         const source = originalImages[idx]
         const outlineColor = clamp(Math.round(color), 1, 15)
         const outlined = source.clone()
@@ -335,7 +335,7 @@ namespace spriteUtils {
     //% target.shadow=variables_get
     //% target.defl=mySprite2
     //% group="Movement"
-    export function getDistanceBetween(sprite: Sprite, target: Sprite): number {
+    export function distanceBetween(sprite: Sprite, target: Sprite): number {
         if (!sprite || !target) return 0
         const dx = target.x - sprite.x
         const dy = target.y - sprite.y
@@ -348,7 +348,7 @@ namespace spriteUtils {
     //% target.shadow=variables_get
     //% target.defl=mySprite2
     //% group="Movement"
-    export function getAngleBetween(sprite: Sprite, target: Sprite): number {
+    export function angleBetween(sprite: Sprite, target: Sprite): number {
         if (!sprite || !target) return 0
         return normalizeAngle(Math.atan2(target.y - sprite.y, target.x - sprite.x) * 180 / Math.PI)
     }
@@ -360,7 +360,7 @@ namespace spriteUtils {
     //% group="Movement"
     export function moveForward(sprite: Sprite, distance: number): void {
         if (!sprite) return
-        const radians = getRotation(sprite) * Math.PI / 180
+        const radians = rotation(sprite) * Math.PI / 180
         sprite.x += Math.cos(radians) * distance
         sprite.y += Math.sin(radians) * distance
     }
@@ -425,7 +425,7 @@ namespace spriteUtils {
     //% group="Image"
     export function cropTransparentBorder(sprite: Sprite): void {
         if (!sprite) return
-        const idx = getSpriteIndex(sprite)
+        const idx = spriteIndex(sprite)
         originalImages[idx] = cropImage(originalImages[idx])
         refreshSpriteImage(sprite)
     }

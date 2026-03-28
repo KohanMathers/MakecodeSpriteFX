@@ -12,8 +12,6 @@ This extension provides sprite utilities in five groups:
 - Face a specific direction
 - Face toward another sprite
 - Smooth rotation over time
-- Pivot rotate around a specific pixel
-- Smooth pivot rotation over time
 
 ### Transform
 - Flip horizontally
@@ -58,8 +56,6 @@ spriteFx.resetRotation(mySprite)
 spriteFx.faceDirection(mySprite, 270)
 spriteFx.faceToward(mySprite, other)
 spriteFx.smoothRotate(mySprite, 180, 1000)
-spriteFx.pivotRotate(mySprite, 90, 0, 0)        // rotate 90° around top-left pixel
-spriteFx.smoothlyPivotRotate(mySprite, 360, 0, 0, 2000) // full spin around top-left over 2s
 
 // Transform
 spriteFx.flipHorizontal(mySprite)

@@ -230,7 +230,7 @@ namespace spriteFx {
         })
     }
 
-    //% block="pivot $sprite by $angle degrees around ($pivotX, $pivotY)"
+    //% block="pivot $sprite by $angle around ($pivotX, $pivotY)"
     //% sprite.shadow=variables_get
     //% sprite.defl=mySprite
     //% angle.defl=45
@@ -252,7 +252,7 @@ namespace spriteFx {
         rotate(sprite, angle)
     }
 
-    //% block="smoothly pivot $sprite by $angle degrees around ($pivotX, $pivotY) over $duration ms"
+    //% block="smoothly pivot $sprite by $angle around ($pivotX, $pivotY) over $duration ms"
     //% sprite.shadow=variables_get
     //% sprite.defl=mySprite
     //% angle.defl=360

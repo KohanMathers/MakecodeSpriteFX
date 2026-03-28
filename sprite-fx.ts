@@ -230,6 +230,68 @@ namespace spriteFx {
         })
     }
 
+    //% block="pivot $sprite by $angle degrees around ($pivotX, $pivotY)"
+    //% sprite.shadow=variables_get
+    //% sprite.defl=mySprite
+    //% angle.defl=45
+    //% pivotX.defl=0 pivotY.defl=0
+    //% group="Rotation"
+    export function pivotRotate(sprite: Sprite, angle: number, pivotX: number, pivotY: number): void {
+        if (!sprite) return
+
+        const w = sprite.image.width
+        const h = sprite.image.height
+        const pdx = pivotX - w / 2
+        const pdy = pivotY - h / 2
+        const radians = angle * Math.PI / 180
+        const cos = Math.cos(radians)
+        const sin = Math.sin(radians)
+
+        sprite.x += pdx * (1 - cos) + pdy * sin
+        sprite.y += -pdx * sin + pdy * (1 - cos)
+        rotate(sprite, angle)
+    }
+
+    //% block="smoothly pivot $sprite by $angle degrees around ($pivotX, $pivotY) over $duration ms"
+    //% sprite.shadow=variables_get
+    //% sprite.defl=mySprite
+    //% angle.defl=360
+    //% pivotX.defl=0 pivotY.defl=0
+    //% duration.defl=1000
+    //% group="Rotation"
+    export function smoothlyPivotRotate(sprite: Sprite, angle: number, pivotX: number, pivotY: number, duration: number): void {
+        if (!sprite) return
+
+        if (duration <= 0) {
+            pivotRotate(sprite, angle, pivotX, pivotY)
+            return
+        }
+
+        control.runInParallel(function () {
+            const w = sprite.image.width
+            const h = sprite.image.height
+            const pdx0 = pivotX - w / 2
+            const pdy0 = pivotY - h / 2
+            const wpx = sprite.x + pdx0
+            const wpy = sprite.y + pdy0
+            const startAngle = rotation(sprite)
+
+            const interval = 20
+            const steps = Math.max(1, Math.idiv(duration, interval))
+
+            for (let i = 1; i <= steps; i++) {
+                const alpha = i / steps
+                const stepRadians = alpha * angle * Math.PI / 180
+                const outDx = Math.cos(stepRadians) * pdx0 - Math.sin(stepRadians) * pdy0
+                const outDy = Math.sin(stepRadians) * pdx0 + Math.cos(stepRadians) * pdy0
+                sprite.x = wpx - outDx
+                sprite.y = wpy - outDy
+                setRotation(sprite, startAngle + alpha * angle)
+                pause(interval)
+            }
+        })
+    }
+
     //% block="flip $sprite horizontally"
     //% sprite.shadow=variables_get
     //% sprite.defl=mySprite
